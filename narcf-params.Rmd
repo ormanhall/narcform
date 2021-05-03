@@ -1,0 +1,75 @@
+---
+params:  
+  mycounty: "Adams"
+output: pdf_document
+fontsize: 12pt
+always_allow_html: true
+header-includes:
+   - \usepackage{caption}
+   - \captionsetup{labelfont=bf, labelsep = newline}
+   - \usepackage{floatrow}
+   - \floatsetup[figure]{capposition=top}
+editor_options: 
+  chunk_output_type: console
+---
+
+\pagenumbering{gobble}
+\clearpage
+\thispagestyle{empty}
+
+\begin{titlepage}
+
+
+\end{titlepage}
+\captionsetup[table]{
+  labelsep=newline,
+justification=justified,
+  singlelinecheck=false, %textfont=it,
+}
+\clearpage
+\tableofcontents
+\clearpage
+\listoftables
+\listoffigures
+
+\newpage
+
+\pagenumbering{arabic}
+
+
+
+```{r, eval=FALSE, echo = FALSE}
+library(tidyverse)
+library(scales)
+library(lubridate)
+library(forecast)
+library(zoo)
+library(sjmisc)
+library(imputeTS)
+library(janitor)
+extrafont::loadfonts()
+library(knitr)
+library(kableExtra)
+```
+
+\clearpage
+
+# Introduction
+
+The following graph has been abstracted from data collected by the Ohio Department of Health on the distribution of Naloxone to Ohio residents in 2020. Also known by the trade name Narcan, the medication is an antagonist medication that can temporarily reverse the effects of opioids like fentanyl, heroin, and prescription opioids. Retrieved 25 April 2021, from https://www.samhsa.gov/medication-assisted-treatment/medications-counseling-related-conditions/naloxone] 
+
+A number of agencies and programs are supported the state's efforts to provide Naloxone to persons struggling with opioid dependence. the following graph ranks from high to low organizations that distributed naloxone kits in * County during 2020. 
+
+```{r, echo=FALSE,message=FALSE,fig.topcaption=TRUE, dpi=300, fig.cap="Kits Distributed by Program, 2020", fig.width=8,fig.height=9.5,warning=FALSE}
+mydf$Program<-factor(mydf$Program) %>%
+  fct_reorder(mydf$KITS)
+ggplot(
+  mydf, 
+  aes(x = Program, y = KITS, fill = KITS)
+  ) + 
+  geom_col(alpha=0.9) + coord_flip() +
+  labs(caption = "Source: Ohio Department of Health", y="KITS", x="Program")+
+  theme(axis.title.y=element_text(hjust=0.9,size=8))+
+  scale_fill_gradient(name="TOTAL KITS",low = "gray80", high = "steelblue4")+  
+  theme_minimal()
+```
